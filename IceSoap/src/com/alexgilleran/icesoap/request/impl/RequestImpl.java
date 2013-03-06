@@ -1,12 +1,5 @@
 package com.alexgilleran.icesoap.request.impl;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Scanner;
-
-import android.os.AsyncTask;
-
 import com.alexgilleran.icesoap.envelope.SOAPEnvelope;
 import com.alexgilleran.icesoap.exception.SOAPException;
 import com.alexgilleran.icesoap.exception.XMLParsingException;
@@ -16,6 +9,14 @@ import com.alexgilleran.icesoap.parser.IceSoapParser;
 import com.alexgilleran.icesoap.parser.impl.IceSoapParserImpl;
 import com.alexgilleran.icesoap.request.Request;
 import com.alexgilleran.icesoap.request.SOAPRequester;
+
+import android.os.AsyncTask;
+import android.os.Build;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Scanner;
 
 /**
  * Implementation of {@link Request}
@@ -191,7 +192,10 @@ public class RequestImpl<ResultType, SOAPFaultType> implements Request<ResultTyp
 	 */
 	@Override
 	public void execute() {
-		createTask().execute();
+	    if (Build.VERSION.SDK_INT<Build.VERSION_CODES.HONEYCOMB)
+	        createTask().execute();
+	    else
+	        createTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 
 	/**
